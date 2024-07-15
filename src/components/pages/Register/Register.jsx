@@ -23,7 +23,7 @@ const Register = () => {
             <div className="text-center  flex justify-center mt-10 items-center">
                 <div className="hero-content  flex-col ">
                     <div className="text-center lg:text-left  ">
-                        <h1 className="text-5xl font-bold text-white mb-8">Welcome to <span className="text-[#3fbad6]">Popular Care.</span> </h1>
+                        <h1 className="text-5xl font-bold text-white mb-8">Welcome to <span className="text-[#3fbad6]">Cash Plus+</span> </h1>
                         <h1 className="text-xl text-gray-300 text-center pb-10">Get Started with Registration.</h1>
                     </div>
                     <div className="card bg-[#1f242d]  w-full max-w-sm shrink-0 shadow-2xl">
@@ -63,7 +63,7 @@ const Register = () => {
                             </div>
                             <div className="form-control mt-6">
                                 <button className="btn bg-[#3fbad6] hover:bg-[#2a313c] text-white border-none w-full" type="submit">Register</button>
-                                <p className="text-gray-300 pt-4">Already have an Account? <Link to='/login'><span className="text-[#3fbad6] font-bold cursor-pointer">Login</span></Link> now!</p>
+                                <p className="text-gray-300 pt-4">Already Registered? <Link to='/login'><span className="text-[#3fbad6] font-bold cursor-pointer">Login</span></Link> now!</p>
                             </div>
                         </form>
                     </div>
