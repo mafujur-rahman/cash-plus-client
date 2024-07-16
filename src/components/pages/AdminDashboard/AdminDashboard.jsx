@@ -7,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 const AdminDashboard = () => {
     const { id } = useParams();
     const [users, setUsers] = useState([]);
-    const [showBalance, setShowBalance] = useState(false); 
     const navigate = useNavigate();
 
    
@@ -42,13 +41,6 @@ const AdminDashboard = () => {
         console.log('Cash Out');
     };
 
-    // Function to handle showing balance
-    const handleShowBalance = () => {
-        setShowBalance(true);
-        setTimeout(() => {
-            setShowBalance(false);
-        }, 3000);
-    };
 
     return (
         <div className="bg-[#323946] min-h-screen">
@@ -68,10 +60,9 @@ const AdminDashboard = () => {
                 <div className="mt-10 flex justify-center">
                     <div className="card bg-[#1f242d] w-full max-w-lg p-6 shadow-2xl">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-2xl text-white font-bold">
-                                Balance: {showBalance ? `$${currentUser?.balance}` : <span className="cursor-pointer text-[#3fbad6] border-none  " onClick={handleShowBalance}>Show</span>}
-                            </h3>
-                            <FaUser className="text-4xl text-[#3fbad6]" />
+                            <FaUser className="text-4xl  text-[#3fbad6]" />
+                            <h3 className="text-xl text-gray-300">{currentUser?.role}</h3>
+                            
                         </div>
                         <div className="gap-4">
                             <button

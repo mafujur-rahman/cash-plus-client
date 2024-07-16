@@ -1,34 +1,34 @@
 import { useState, useEffect } from 'react';
 import { FaUser, FaPlus, FaArrowUp, FaArrowDown } from 'react-icons/fa';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const UserDashboard = () => {
     const { id } = useParams();
     const [users, setUsers] = useState([]);
-    const [showBalance, setShowBalance] = useState(false); 
+    const [showBalance, setShowBalance] = useState(false);
     const navigate = useNavigate();
 
-   
+
     useEffect(() => {
         axios.get('http://localhost:5000/register')
             .then(res => {
-                setUsers(res.data); 
+                setUsers(res.data);
             })
             .catch(err => {
                 console.error(err);
             });
     }, []);
 
-//    find currentUser
+    //    find currentUser
     const currentUser = users.find(user => user._id === id);
 
 
-    const handleLogOut = () =>{
+    const handleLogOut = () => {
         localStorage.removeItem('token');
         navigate('/login')
     }
-    
+
     const handleCashIn = () => {
         // Add logic for cash in operation
         console.log('Cash In');
@@ -62,7 +62,7 @@ const UserDashboard = () => {
                     </div>
                     <div className="flex gap-3 items-center">
                         <FaUser className='text-[#3fbad6]' />
-                        <h3 className="text-[#3fbad6]">{currentUser?.name }</h3>
+                        <h3 className="text-[#3fbad6]">{currentUser?.name}</h3>
                         <button onClick={handleLogOut} className="btn bg-[#3fbad6] border-none text-white">Logout</button>
                     </div>
                 </div>
@@ -76,27 +76,34 @@ const UserDashboard = () => {
                             <FaUser className="text-4xl text-[#3fbad6]" />
                         </div>
                         <div className="gap-4">
-                            <button
-                                className="btn my-3 border-none bg-[#3fbad6] hover:bg-[#2a313c] text-white flex items-center justify-center w-full py-3"
-                                onClick={handleCashIn}
-                            >
-                                <FaPlus className="mr-2" />
-                                Cash In
-                            </button>
-                            <button
-                                className="btn my-3 border-none bg-[#3fbad6] hover:bg-[#2a313c] text-white flex items-center justify-center w-full py-3"
-                                onClick={handleSendMoney}
-                            >
-                                <FaArrowUp className="mr-2" />
-                                Send Money
-                            </button>
-                            <button
-                                className="btn my-3 border-none bg-[#3fbad6] hover:bg-[#2a313c] text-white flex items-center justify-center w-full py-3"
-                                onClick={handleCashOut}
-                            >
-                                <FaArrowDown className="mr-2" />
-                                Cash Out
-                            </button>
+
+                            <Link to='/send-money'>
+                                <button
+                                    className="btn my-3 border-none bg-[#3fbad6] hover:bg-[#2a313c] text-white flex items-center justify-center w-full py-3"
+                                    onClick={handleSendMoney}
+                                >
+                                    <FaArrowUp className="mr-2" />
+                                    Send Money
+                                </button>
+                            </Link>
+                            <Link to='/cash-out'>
+                                <button
+                                    className="btn my-3 border-none bg-[#3fbad6] hover:bg-[#2a313c] text-white flex items-center justify-center w-full py-3"
+                                    onClick={handleCashOut}
+                                >
+                                    <FaArrowDown className="mr-2" />
+                                    Cash Out
+                                </button>
+                            </Link>
+                            <Link to='/cash-in'>
+                                <button
+                                    className="btn my-3 border-none bg-[#3fbad6] hover:bg-[#2a313c] text-white flex items-center justify-center w-full py-3"
+                                    onClick={handleCashIn}
+                                >
+                                    <FaPlus className="mr-2" />
+                                    Cash In
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
