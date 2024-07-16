@@ -2,12 +2,15 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import UserDashboard from '../UserDashboard/UserDashboard';
+import AgentDashboard from '../AgentDashboard/AgentDashboard';
+import AdminDashboard from '../AdminDashboard/AdminDashboard';
 
 const Login = () => {
-    const [user, setUser] = useState(null);
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         const form = e.target;
         const mobileNumberOrEmail = form.mobileNumber.value;
@@ -19,42 +22,63 @@ const Login = () => {
             pin
         };
 
-        axios.post('http://localhost:5000/login', loginInfo)
-            .then(res => {
-                console.log(res.data);
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Logged in successfully",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setUser(res.data.user);
+        try {
+            const res = await axios.post('http://localhost:5000/login', loginInfo);
+            console.log(res.data); // Check the response structure for debugging
 
-                // Store the JWT token in local storage
-                localStorage.setItem('token', res.data.token, user);
+            // Store the JWT token in local storage
+            localStorage.setItem('token', res.data.token);
 
-                // Redirect based on the user's role
-                if (res.data.user.role === 'User') {
-                    navigate('/user-dashboard');
-                } else if (res.data.user.role === 'Agent') {
-                    navigate('/agent-dashboard');
-                } else if (res.data.user.role === 'Admin') {
-                    navigate('/admin-dashboard')
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: `${err.response ? err.response.data : 'Login failed'}`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+            // Update the user state
+            setUser(res.data.user);
+
+            // Redirect based on the user's role
+            if (res.data.user.role === 'User') {
+                navigate('/user-dashboard');
+            } else if (res.data.user.role === 'Agent') {
+                navigate('/agent-dashboard');
+            } else if (res.data.user.role === 'Admin') {
+                navigate('/admin-dashboard');
+            }
+            
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Logged in successfully",
+                showConfirmButton: false,
+                timer: 1500
             });
+
+        } catch (err) {
+            console.error(err);
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: `${err.response ? err.response.data : 'Login failed'}`,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
     };
 
+    // Conditional rendering of Dashboard based on user role
+    const renderDashboard = () => {
+        if (user) {
+            switch (user.role) {
+                case 'User':
+                    return <UserDashboard user={user} />;
+                case 'Agent':
+                    return <AgentDashboard user={user} />;
+                case 'Admin':
+                    return <AdminDashboard user={user} />;
+                default:
+                    return null;
+            }
+        }
+        return null;
+    };
+
+    // Render login form if user is not logged in yet
     return (
         <div className="bg-[#323946] min-h-screen">
             <div className="text-3xl text-white font-bold mx-auto container pt-10 flex gap-1 items-center">
@@ -88,6 +112,8 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            {/* Render Dashboard based on user role */}
+            {renderDashboard()}
         </div>
     );
 };
