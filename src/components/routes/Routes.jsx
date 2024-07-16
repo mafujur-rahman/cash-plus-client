@@ -3,6 +3,7 @@ import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import UserDashboard from "../pages/UserDashboard/UserDashboard";
 import AgentDashboard from "../pages/AgentDashboard/AgentDashboard";
+import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path:'/agent-dashboard',
         element:<AgentDashboard></AgentDashboard>
+      },
+      {
+        path:'/admin-dashboard',
+        element:<AdminDashboard></AdminDashboard>
       }
     
   ]);
