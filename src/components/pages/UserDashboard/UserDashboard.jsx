@@ -1,13 +1,34 @@
-import PropTypes from 'prop-types';
-import { FaUser, FaPlus, FaArrowUp, FaArrowDown } from 'react-icons/fa'; // Importing necessary icons
-import { useState } from 'react'; // Importing useState and useEffect for managing state and side effects
+import { useState, useEffect } from 'react';
+import { FaUser, FaPlus, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
-const UserDashboard = ({ user }) => {
-    // Example state for balance (replace with actual state management if needed)
-    const [balance, setBalance] = useState(10000); // Example balance state
-    const [showBalance, setShowBalance] = useState(false); // State to control showing balance
+const UserDashboard = () => {
+    const { id } = useParams();
+    const [users, setUsers] = useState([]);
+    const [showBalance, setShowBalance] = useState(false); 
+    const navigate = useNavigate();
 
-    // Example functions for cash operations (replace with actual logic)
+   
+    useEffect(() => {
+        axios.get('http://localhost:5000/register')
+            .then(res => {
+                setUsers(res.data); 
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
+
+//    find currentUser
+    const currentUser = users.find(user => user._id === id);
+
+
+    const handleLogOut = () =>{
+        localStorage.removeItem('token');
+        navigate('/login')
+    }
+    
     const handleCashIn = () => {
         // Add logic for cash in operation
         console.log('Cash In');
@@ -28,7 +49,7 @@ const UserDashboard = ({ user }) => {
         setShowBalance(true);
         setTimeout(() => {
             setShowBalance(false);
-        }, 3000); 
+        }, 3000);
     };
 
     return (
@@ -40,18 +61,17 @@ const UserDashboard = ({ user }) => {
                         <h2>Cash <span className="text-[#3fbad6]">Plus+</span></h2>
                     </div>
                     <div className="flex gap-3 items-center">
-                        <FaUser />
-                        <h3 className="text-white">{user?.name}</h3> {/* Replace with actual user data */}
-                        <button className="btn bg-[#3fbad6] border-none text-white">Logout</button>
+                        <FaUser className='text-[#3fbad6]' />
+                        <h3 className="text-[#3fbad6]">{currentUser?.name }</h3>
+                        <button onClick={handleLogOut} className="btn bg-[#3fbad6] border-none text-white">Logout</button>
                     </div>
                 </div>
 
-                {/* Balance check field and buttons */}
                 <div className="mt-10 flex justify-center">
                     <div className="card bg-[#1f242d] w-full max-w-lg p-6 shadow-2xl">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-2xl text-white font-bold">
-                                Balance: {showBalance ? `$${balance}` : <span className="cursor-pointer text-[#3fbad6] border-none  " onClick={handleShowBalance}>Show</span>}
+                                Balance: {showBalance ? `$${currentUser?.balance}` : <span className="cursor-pointer text-[#3fbad6] border-none  " onClick={handleShowBalance}>Show</span>}
                             </h3>
                             <FaUser className="text-4xl text-[#3fbad6]" />
                         </div>
@@ -83,10 +103,6 @@ const UserDashboard = ({ user }) => {
             </div>
         </div>
     );
-};
-
-UserDashboard.propTypes = {
-    user: PropTypes.object.isRequired,
 };
 
 export default UserDashboard;
