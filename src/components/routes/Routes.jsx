@@ -21,11 +21,11 @@ const router = createBrowserRouter([
         element:<UserDashboard></UserDashboard>
       },
       {
-        path:'/agent-dashboard',
+        path:'/agent-dashboard/:id',
         element:<AgentDashboard></AgentDashboard>
       },
       {
-        path:'/admin-dashboard',
+        path:'/admin-dashboard/:id',
         element:<AdminDashboard></AdminDashboard>
       }
     
