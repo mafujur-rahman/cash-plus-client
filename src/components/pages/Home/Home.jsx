@@ -1,11 +1,12 @@
-import Banner from "./Banner/Banner";
+import Login from "../Login/Login";
+
 
 const Home = () => {
 
     
     return (
         <div className="bg-[#323946] min-h-screen ">
-            <Banner></Banner>
+            <Login></Login>
         </div>
     );
 };

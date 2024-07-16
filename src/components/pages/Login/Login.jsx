@@ -30,9 +30,9 @@ const Login = () => {
                             </div>
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text text-gray-300">Pin</span>
+                                    <span className="label-text text-gray-300">Your Pin</span>
                                 </label>
-                                <input type="password" placeholder="Create a new pin" name="pin" className="input input-bordered bg-[#323946] text-gray-200" required />
+                                <input type="password" placeholder="Enter your pin" name="pin" className="input input-bordered bg-[#323946] text-gray-200" required />
                             </div>
                             <div className="form-control mt-6">
                                 <button className="btn bg-[#3fbad6] hover:bg-[#2a313c] text-white border-none w-full" type="submit">Log in</button>
@@ -45,5 +45,4 @@ const Login = () => {
         </div>
     );
 };
-
 export default Login;

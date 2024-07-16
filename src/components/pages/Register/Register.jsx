@@ -1,9 +1,10 @@
+import axios from "axios";
 import { Link } from "react-router-dom";
-
+import Swal from "sweetalert2";
 
 const Register = () => {
 
-    const handleRegister = e =>{
+    const handleRegister = (e) => {
         e.preventDefault();
         const form = e.target;
         const name = form.name.value;
@@ -11,12 +12,65 @@ const Register = () => {
         const email = form.email.value;
         const pin = form.pin.value;
         const role = form.role.value;
-        const newUserAgent = {
-            name,mobileNumber,email,pin,role
-        }
-        console.log(newUserAgent);
-    }
 
+        // Remove country code for backend storage
+        const formattedMobileNumber = mobileNumber.startsWith("+880") ? mobileNumber.slice(4) : mobileNumber;
+
+        if (formattedMobileNumber.length !== 11) {
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Mobile number must be 11 digits long.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+
+        const newUser = {
+            name,
+            mobileNumber: mobileNumber,
+            email,
+            pin,
+            role
+        };
+
+        console.log("New User Data: ", newUser);
+
+        if (pin.length === 5) {
+            axios.post('http://localhost:5000/register', newUser)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.insertedId) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Registered successfully, waiting for admin approval",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: `${err.response.data}`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                });
+        } else {
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Pin must be 5 digits.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    };
 
     return (
         <div>
@@ -38,7 +92,7 @@ const Register = () => {
                                 <label className="label">
                                     <span className="label-text text-gray-300">Mobile Number</span>
                                 </label>
-                                <input type="text" placeholder="Mobile Number" name="mobileNumber" className="input input-bordered bg-[#323946] text-gray-200" required />
+                                <input type="number" placeholder="+8801XXXXXXXXX" name="mobileNumber" className="input input-bordered bg-[#323946] text-gray-200" required pattern="\+8801[0-9]{9}" maxLength="14" />
                             </div>
                             <div className="form-control">
                                 <label className="label">
@@ -48,13 +102,13 @@ const Register = () => {
                             </div>
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text text-gray-300">Pin</span>
+                                    <span className="label-text text-gray-300">Create Pin</span>
                                 </label>
-                                <input type="password" placeholder="Create a new pin" name="pin" className="input input-bordered bg-[#323946] text-gray-200" required />
+                                <input type="number" placeholder="Create a 5 digit pin" name="pin" className="input input-bordered bg-[#323946] text-gray-200" required />
                             </div>
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text text-gray-300">Role</span>
+                                    <span className="label-text text-gray-300">Role (User/Agent)</span>
                                 </label>
                                 <select name="role" className="input input-bordered bg-[#323946] text-gray-200" required>
                                     <option value="User">User</option>
